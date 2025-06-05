@@ -1,4 +1,4 @@
-FROM ubuntu:24.04 as Linux-builder
+FROM ubuntu:25.10 AS bpf-linux-builder
 
 ENV LINUX=/linux 
 
@@ -18,3 +18,16 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install --fix-missing -y git build-es
  pkg-config lsb-release wget software-properties-common gnupg zlib1g llvm \
  qemu-kvm libvirt-clients libvirt-daemon-system bridge-utils virtinst libvirt-daemon xterm attr busybox openssh-server \
  iputils-ping kmod
+
+# clang and llvm
+RUN DEBIAN_FRONTEND=noninteractive apt-get update
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y clang llvm lld
+
+# Essentials
+RUN DEBIAN_FRONTEND=noninteractive apt-get update
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y iputils-ping kmod curl autoconf gdb
+
+# SCX tools
+RUN DEBIAN_FRONTEND=noninteractive apt-get update
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y protobuf-compiler python3-docutils
+
